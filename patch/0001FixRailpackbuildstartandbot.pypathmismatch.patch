@@ -1,0 +1,99 @@
+From a99e5dec222f894a73407fcf46de86d3e5a2f4e8 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Wed, 19 Aug 2026 16:03:09 +0000
+Subject: [PATCH] Fix Railpack build/start and bot.py path mismatch
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The Python source was moved into Corebot/ but the deployment configs
+(Procfile, Deployment railway.json/Dockerfile) still pointed at a
+root-level bot.py that no longer exists. Railpack's Python provider
+only looks for a main file (main.py/app.py/bot.py/...) in the project
+root, so with none there it fell through to whatever the Procfile
+provided — which was also wrong.
+
+- Add railpack.json declaring the Python provider and the correct
+  start command (python Corebot/bot.py), which takes precedence over
+  the Procfile/provider guesswork.
+- Fix Procfile, Deployment/railway.json and Deployment/Dockerfile to
+  reference Corebot/bot.py.
+- Fix Corebot/config.py's DEFAULT_EXCEL_PATH, which pointed at
+  Corebot/data/ instead of the actual repo-root data/ directory.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JQWvLYv9KW2kKoqnC3QLdv
+---
+ Corebot/config.py       |  2 +-
+ Deployment/Dockerfile   |  2 +-
+ Deployment/railway.json |  2 +-
+ Procfile                |  2 +-
+ railpack.json           | 10 ++++++++++
+ 5 files changed, 14 insertions(+), 4 deletions(-)
+ create mode 100644 railpack.json
+
+diff --git a/Corebot/config.py b/Corebot/config.py
+index 6e49702..715992e 100644
+--- a/Corebot/config.py
++++ b/Corebot/config.py
+@@ -185,7 +185,7 @@ def validate_token() -> tuple[bool, str]:
+ # Change EXCEL_PATH to your real synced location, e.g.
+ #   C:/Users/<you>/OneDrive - MyCompany/FM/maintenance_jobs.xlsx
+ BASE_DIR = Path(__file__).parent
+-DEFAULT_EXCEL_PATH = BASE_DIR / "data" / "maintenance_jobs.xlsx"
++DEFAULT_EXCEL_PATH = BASE_DIR.parent / "data" / "maintenance_jobs.xlsx"
+ 
+ # expanduser() lets you write "~/OneDrive/..." instead of a full path.
+ # _env() means a blank "EXCEL_PATH=" line correctly falls back to the default
+diff --git a/Deployment/Dockerfile b/Deployment/Dockerfile
+index 8cac39c..a6d7bad 100644
+--- a/Deployment/Dockerfile
++++ b/Deployment/Dockerfile
+@@ -45,4 +45,4 @@ RUN python -c "import telegram, pandas, openpyxl, requests, dotenv; print('All d
+ # Start the bot. Uses the exec form so Ctrl-C / platform shutdown signals
+ # reach Python directly and it stops cleanly.
+ # -----------------------------------------------------------------------
+-CMD ["python", "bot.py"]
++CMD ["python", "Corebot/bot.py"]
+diff --git a/Deployment/railway.json b/Deployment/railway.json
+index 59b5733..5662020 100644
+--- a/Deployment/railway.json
++++ b/Deployment/railway.json
+@@ -5,7 +5,7 @@
+     "dockerfilePath": "Dockerfile"
+   },
+   "deploy": {
+-    "startCommand": "python bot.py",
++    "startCommand": "python Corebot/bot.py",
+     "restartPolicyType": "ON_FAILURE",
+     "restartPolicyMaxRetries": 10
+   }
+diff --git a/Procfile b/Procfile
+index 5b855f2..120ad94 100644
+--- a/Procfile
++++ b/Procfile
+@@ -4,4 +4,4 @@
+ # HTTP port. If declared as "web", the platform waits for the bot to bind a
+ # port, never sees one, and kills it as a failed health check. "worker" tells
+ # the platform "this is a background process, just keep it alive".
+-worker: python bot.py
++worker: python Corebot/bot.py
+diff --git a/railpack.json b/railpack.json
+new file mode 100644
+index 0000000..3a7b473
+--- /dev/null
++++ b/railpack.json
+@@ -0,0 +1,10 @@
++{
++  "$schema": "https://schema.railpack.com",
++  "provider": "python",
++  "packages": {
++    "python": "3.12"
++  },
++  "deploy": {
++    "startCommand": "python Corebot/bot.py"
++  }
++}
+-- 
+2.43.0
+
