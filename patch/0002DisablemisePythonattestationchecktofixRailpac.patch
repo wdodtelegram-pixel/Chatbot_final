@@ -1,0 +1,40 @@
+From 70605defa6fb18ede7fdd082c9047dcfbb9e50cd Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Wed, 19 Aug 2026 16:50:34 +0000
+Subject: [PATCH 2/2] Disable mise Python attestation check to fix Railpack
+ build
+
+Railpack's mise-based build verifies python-build-standalone releases
+against GitHub artifact attestations. python@3.12.7 (pinned by
+runtime.txt) predates attestations being published for that release,
+so the build fails outright:
+
+  mise ERROR Failed to install core:python@3.12.7: No GitHub artifact
+  attestations found for python@3.12.7
+
+Add a project mise.toml disabling python.github_attestations, which
+Railpack auto-discovers and merges into its generated mise config.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01JQWvLYv9KW2kKoqnC3QLdv
+---
+ mise.toml | 7 +++++++
+ 1 file changed, 7 insertions(+)
+ create mode 100644 mise.toml
+
+diff --git a/mise.toml b/mise.toml
+new file mode 100644
+index 0000000..93a545e
+--- /dev/null
++++ b/mise.toml
+@@ -0,0 +1,7 @@
++[settings]
++# Railpack's build (via mise) verifies python-build-standalone releases against
++# GitHub artifact attestations. python@3.12.7's release predates attestations
++# being published, so verification fails outright:
++#   mise ERROR Failed to install core:python@3.12.7: No GitHub artifact
++#   attestations found for python@3.12.7
++python.github_attestations = false
+-- 
+2.43.0
+
