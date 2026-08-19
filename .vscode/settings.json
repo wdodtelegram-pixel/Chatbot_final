@@ -1,0 +1,45 @@
+{
+  // -----------------------------------------------------------------------
+  // PURPOSE: workspace settings that apply only to this project.
+  //
+  // NOTE: the interpreter itself is NOT set here on purpose. Use
+  // Ctrl+Shift+P -> "Python: Select Interpreter" instead, and VS Code writes
+  // your machine-specific path into .vscode/settings.json automatically.
+  // Hard-coding a path here would break on any other machine.
+  // -----------------------------------------------------------------------
+
+  // Auto-activate the virtual environment whenever you open a new terminal,
+  // so you never accidentally pip-install into your global Python.
+  "python.terminal.activateEnvInCurrentTerminal": true,
+
+  // The Python extension reads .env when DEBUGGING (F5). The bot also loads it
+  // itself via python-dotenv, so it works either way -- but this keeps the two
+  // consistent and means breakpoints see the same token.
+  "python.envFile": "${workspaceFolder}/.env",
+
+  // Pylance type checking. "basic" catches real mistakes (typos in attribute
+  // names, wrong argument counts) without drowning you in pandas warnings.
+  // Set to "off" if the squiggles get distracting.
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.autoImportCompletions": true,
+
+  // Hide clutter from the file explorer. These are generated, never edited.
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true
+  },
+
+  // Keep the source tidy automatically.
+  "[python]": {
+    "editor.formatOnSave": false,
+    "editor.rulers": [88],
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true
+  },
+
+  // The bot writes UTF-8 emoji into messages. Forcing UTF-8 avoids mangled
+  // characters if Windows defaults the file encoding to cp1252.
+  "files.encoding": "utf8",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true
+}

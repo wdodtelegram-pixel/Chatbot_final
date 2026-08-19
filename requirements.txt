@@ -1,0 +1,28 @@
+# -----------------------------------------------------------------------
+# REQUIRES 64-BIT PYTHON. pandas has published no 32-bit Windows wheels
+# since Python 3.12, so a 32-bit install cannot run this bot.
+# Check yours with:  python -c "import sys; print(sys.maxsize > 2**32)"
+# True = 64-bit (good). False = 32-bit (reinstall Python, 64-bit).
+#
+# Tested on Python 3.12, 3.13 and 3.14 with both pandas 2.x and 3.x.
+# -----------------------------------------------------------------------
+
+# Telegram framework. The [job-queue] extra pulls in APScheduler, which the
+# background workbook-refresh job depends on. Without the extra,
+# application.job_queue is None and the scheduled refresh is skipped.
+python-telegram-bot[job-queue]>=21.0,<23.0
+
+# Reads the workbook and does the category filtering.
+# Left as a range, not a hard pin: pandas 2.2.x has no wheel for Python 3.14,
+# and pandas 3.x has no wheel for Python 3.9. A range lets pip pick the one
+# that matches whatever Python you installed.
+pandas>=2.2,<4.0
+
+# The engine pandas uses to open .xlsx files. Also used by create_workbook.py.
+openpyxl>=3.1,<4.0
+
+# Only needed if you use the ONEDRIVE_SHARE_LINK download fallback.
+requests>=2.31,<3.0
+
+# Loads the bot token from .env so it stays out of source control.
+python-dotenv>=1.0,<2.0

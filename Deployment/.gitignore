@@ -1,0 +1,37 @@
+# -----------------------------------------------------------------------
+# CRITICAL: .env holds your bot token. Anyone who gets it controls your bot.
+# If you ever commit it by accident, revoke the token immediately with
+# /revoke in @BotFather -- deleting the commit is NOT enough.
+# -----------------------------------------------------------------------
+.env
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Excel lock files. Excel creates these while a file is open; they are not
+# real workbooks and would confuse anyone browsing the repo.
+~$*.xlsx
+.~lock.*
+
+# Live maintenance data. The real workbook belongs in OneDrive, not git --
+# it changes constantly and may contain internal site information.
+# Comment this line out if you WANT the sample workbook tracked.
+data/maintenance_jobs.xlsx
+
+# VS Code: keep shared config, ignore personal interpreter paths
+# (Python: Select Interpreter writes machine-specific paths into settings.json)
+.vscode/settings.json
+
+# OS clutter
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log

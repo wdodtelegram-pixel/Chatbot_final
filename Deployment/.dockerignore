@@ -1,0 +1,35 @@
+# Keep the container image small and free of secrets.
+# Anything listed here is NOT copied into the image by "COPY . ."
+
+# NEVER ship your token into an image — set it as a platform env var instead.
+.env
+uploader_config.env
+service_account.json
+
+# Virtual environments (the image builds its own)
+venv/
+.venv/
+env/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# The office-PC uploader is not part of the server deploy
+uploader.py
+uploader_config.env.example
+requirements_uploader.txt
+
+# Local Excel data — in a container you use Google CSV or a mounted volume,
+# not a baked-in file. Remove this line if you DO want to ship a starter file.
+data/
+
+# Docs and dev tooling
+*.md
+.vscode/
+.git/
+.gitignore
+.github/
+
+# Logs
+*.log

@@ -1,0 +1,5 @@
+# Install on the OFFICE PC only, not the VPS.
+# Run: pip install -r requirements_uploader.txt
+paramiko>=3.0,<4.0
+watchdog>=4.0,<5.0
+python-dotenv>=1.0,<2.0

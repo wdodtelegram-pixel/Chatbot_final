@@ -1,0 +1,19 @@
+{
+  // PURPOSE: when you open this folder, VS Code offers to install these.
+  // Only the first two are genuinely needed.
+  "recommendations": [
+    // Core Python support: running, debugging, interpreter selection.
+    "ms-python.python",
+
+    // Pylance: autocomplete and type checking. Makes config.COL_STATUS
+    // autocomplete correctly and flags typos before you run anything.
+    "ms-python.vscode-pylance",
+
+    // Optional: lets you open data/maintenance_jobs.xlsx inside VS Code
+    // instead of switching to Excel just to eyeball a row.
+    "GrapeCity.gc-excelviewer",
+
+    // Optional: syntax highlighting for the .env file.
+    "mikestead.dotenv"
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  // PURPOSE: gives you F5 "Run and Debug" entries for each script, so you can
+  // set breakpoints instead of scattering print() calls through the code.
+  //
+  // Pick which one runs from the dropdown at the top of the Run and Debug
+  // panel (Ctrl+Shift+D).
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // RUN THIS FIRST if anything fails to start. Checks your Python
+      // architecture, packages, .env, token format and workbook, then tells
+      // you exactly which one is broken. Makes no network calls.
+      "name": "Check setup (run this first)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/check_setup.py",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      // The main one. F5 with this selected starts the bot with the debugger
+      // attached -- put a breakpoint in any handler in bot.py and it will pause
+      // when you send that command from Telegram.
+      "name": "Run bot",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/bot.py",
+      "console": "integratedTerminal",
+      // justMyCode=false lets you step INTO pandas / python-telegram-bot code.
+      // Set to true if stepping keeps dropping you into library internals.
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      // Run this before ever touching a token. Prints every message to the
+      // terminal so you can proofread layout without messaging your phone.
+      "name": "Test offline (no token needed)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/test_offline.py",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      // Regenerates data/maintenance_jobs.xlsx. Overwrites the existing file,
+      // so do not run this once you have real job records in it.
+      "name": "Create starter workbook",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/create_workbook.py",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
